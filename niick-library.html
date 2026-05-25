@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NiiCk's Design Tokens - library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Display:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=Fragment+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/global-app.css">
+<style>
+
+/* Noise *
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9990;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-size: 180px;
+	opacity: 0.035;
+}
+
+═══ LAYOUT ═══ */
+.shell {
+	display: flex;
+	min-height: 100vh;
+}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 232px;
+	background: rgb(var(--app-surface));
+	border-right: 1px solid rgb(var(--app-border));
+	display: flex;
+	flex-direction: column;
+	padding: 24px 16px;
+	z-index: 100;
+	overflow-y: auto;
+	scrollbar-width: none;
+	transform: translateX(0);
+	/* Default Open on Desktop */
+	transition: transform 0.35s var(--ease-standard);
+}
+
+.sidebar::-webkit-scrollbar {
+	display: none;
+}
+
+/* For mobile hidden state */
+.sidebar.closed {
+	transform: translateX(-100%);
+}
+
+.sidebar-toggle {
+	position: fixed;
+	top: 20px;
+	left: 246px;
+	/* Positioned relative to open sidebar */
+	z-index: 200;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: rgb(var(--app-surface-raised));
+	border: 1px solid rgb(var(--app-border-muted));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: rgb(var(--app-foreground-muted));
+	transition: left 0.35s var(--ease-standard), background 0.2s, transform 0.35s;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-toggle:hover {
+	background: rgba(255, 255, 255, 0.1);
+	color: rgb(var(--app-foreground));
+}
+
+.sidebar-toggle.is-closed {
+	left: 14px;
+}
+
+.sidebar-toggle.is-closed svg {
+	transform: rotate(180deg);
+}
+
+.sidebar-logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 36px;
+}
+
+.logo-mark {
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	background: rgb(var(--app-brand));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: "Instrument Serif", serif;
+	font-style: italic;
+	font-size: 15px;
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(255, 94, 0, 0.4);
+}
+
+.logo-name {
+	font-family: "Inter Display", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+
+.logo-sub {
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+	font-family: "Fragment Mono", monospace;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.nav-label {
+	font-size: 9px;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: rgb(var(--app-foreground-muted));
+	font-family: "Fragment Mono", monospace;
+	padding: 0 8px;
+	margin-bottom: 4px;
+	margin-top: 16px;
+}
+
+.nav-item {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 8px;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: rgb(var(--app-foreground-muted));
+	cursor: pointer;
+	transition: all 0.2s var(--ease-standard);
+	border: 1px solid transparent;
+	margin-bottom: 1px;
+	text-decoration: none;
+}
+
+.nav-item:hover {
+	background: rgba(255, 255, 255, 0.05);
+	color: rgb(var(--app-foreground));
+}
+
+.nav-item.active {
+	background: rgba(255, 255, 255, 0.08);
+	color: rgb(var(--app-foreground));
+	border-color: rgb(var(--app-border-muted));
+}
+
+.nav-item svg {
+	width: 13px;
+	height: 13px;
+	opacity: 0.7;
+	flex-shrink: 0;
+}
+
+.nav-item.active svg {
+	opacity: 1;
+}
+
+.nav-count {
+	margin-left: auto;
+	font-size: 9px;
+	font-family: "Fragment Mono", monospace;
+	background: rgba(255, 255, 255, 0.06);
+	padding: 2px 6px;
+	border-radius: 999px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+.sidebar-bottom {
+	margin-top: auto;
+	padding-top: 16px;
+	border-top: 1px solid rgb(var(--app-border));
+}
+
+.sidebar-info {
+	font-family: "Fragment Mono", monospace;
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+	line-height: 1.8;
+}
+
+.sidebar-info span {
+	color: rgb(var(--app-brand));
+}
+
+/* ═══ MAIN ═══ */
+.main {
+	margin-left: 232px;
+	padding: 36px 40px 80px;
+	flex: 1;
+	transition: margin-left 0.35s var(--ease-standard);
+}
+
+.main.sidebar-closed {
+	margin-left: 0;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+	padding-bottom: 36px;
+	margin-bottom: 48px;
+	border-bottom: 1px solid rgb(var(--app-border));
+}
+
+.hero-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: "Fragment Mono", monospace;
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: rgb(var(--app-foreground-muted));
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 999px;
+	padding: 4px 12px;
+	margin-bottom: 20px;
+}
+
+.hero-badge-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: rgb(var(--app-brand));
+}
+
+.hero-title {
+	font-family: "Inter Display", sans-serif;
+	font-size: clamp(36px, 4vw, 60px);
+	font-weight: 600;
+	letter-spacing: -0.05em;
+	line-height: 1;
+	margin-bottom: 12px;
+}
+
+.hero-title em {
+	font-family: "Instrument Serif", serif;
+	font-style: italic;
+	color: rgb(var(--app-brand));
+	font-weight: 400;
+}
+
+.hero-desc {
+	font-size: 14px;
+	color: rgb(var(--app-foreground-muted));
+	line-height: 1.7;
+	max-width: 520px;
+	margin-bottom: 28px;
+}
+
+.hero-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.hero-stat {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 12px;
+	padding: 14px 18px;
+}
+
+.hero-stat-n {
+	font-family: "Inter Display", sans-serif;
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+}
+
+.hero-stat-l {
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+	font-family: "Fragment Mono", monospace;
+	margin-top: 2px;
+	text-transform: uppercase;
+}
+
+/* ═══ REVEAL ANIMATIONS (FIXED) ═══ */
+.reveal-hidden {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 0.6s var(--ease-standard), transform 0.6s var(--ease-standard);
+}
+
+.reveal-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Staggering for initial load */
+.hero .reveal-hidden:nth-child(1) {
+	transition-delay: 0.1s;
+}
+
+.hero .reveal-hidden:nth-child(2) {
+	transition-delay: 0.2s;
+}
+
+.hero .reveal-hidden:nth-child(3) {
+	transition-delay: 0.3s;
+}
+
+.hero .reveal-hidden:nth-child(4) {
+	transition-delay: 0.4s;
+}
+
+.token-section {
+	margin-bottom: 60px;
+	scroll-margin-top: 36px;
+}
+
+.section-head {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.section-title {
+	font-family: "Inter Display", sans-serif;
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: -0.03em;
+}
+
+.section-sub {
+	font-size: 12px;
+	color: rgb(var(--app-foreground-muted));
+	font-family: "Fragment Mono", monospace;
+}
+
+/* ═══ TOKEN ROW ═══ */
+.token-row {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	border-radius: 10px;
+	border: 1px solid rgb(var(--app-border));
+	background: rgb(var(--app-surface));
+	margin-bottom: 6px;
+	gap: 14px;
+	transition: border-color 0.2s;
+}
+
+.token-row:hover {
+	border-color: rgb(var(--app-border-muted));
+}
+
+.token-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.token-name {
+	font-size: 13px;
+	font-weight: 500;
+	margin-bottom: 3px;
+}
+
+.token-val {
+	font-family: "Fragment Mono", monospace;
+	font-size: 11px;
+	color: rgb(var(--app-foreground-muted));
+	background: rgba(255, 255, 255, 0.05);
+	padding: 2px 8px;
+	border-radius: 4px;
+	display: inline-block;
+}
+
+/* ═══ COLOR GRID ═══ */
+.color-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: 10px;
+}
+
+.color-card {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 14px;
+	overflow: hidden;
+	cursor: pointer;
+	transition: border-color 0.2s, transform 0.2s var(--ease-spring);
+}
+
+.color-card:hover {
+	border-color: rgb(var(--app-border-muted));
+	transform: translateY(-2px);
+}
+
+.color-swatch {
+	height: 80px;
+}
+
+.color-info {
+	padding: 12px;
+}
+
+.color-name {
+	font-size: 12px;
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.color-hex {
+	font-family: "Fragment Mono", monospace;
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+.radius-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 10px;
+}
+
+.radius-card {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+.radius-box {
+	width: 64px;
+	height: 64px;
+	background: rgba(255, 94, 0, 0.15);
+	border: 1.5px solid rgba(255, 94, 0, 0.4);
+}
+
+.radius-name {
+	font-size: 11px;
+	font-weight: 500;
+}
+
+.radius-val {
+	font-family: "Fragment Mono", monospace;
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+/* ═══ SHADOW DEMO ═══ */
+.shadow-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+.shadow-card {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 14px;
+	padding: 24px;
+}
+
+.shadow-box {
+	width: 80px;
+	height: 80px;
+	border-radius: 12px;
+	background: rgb(var(--app-background));
+	margin: 0 auto 16px;
+}
+
+.shadow-name {
+	font-size: 12px;
+	font-weight: 500;
+	text-align: center;
+	margin-bottom: 6px;
+}
+
+.shadow-desc {
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+	text-align: center;
+	font-family: "Fragment Mono", monospace;
+	line-height: 1.6;
+}
+
+/* ═══ COMPONENT DEMOS ═══ */
+.component-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+.component-card {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 14px;
+	padding: 24px;
+}
+
+.component-card h4 {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: rgb(var(--app-foreground-muted));
+	font-family: "Fragment Mono", monospace;
+	margin-bottom: 20px;
+}
+
+/* Button demo */
+.demo-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: rgb(var(--selection-text));
+	color: #fff;
+	border-radius: 154px;
+	padding: 11px 24px;
+	font-family: "Inter Tight", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	border: none;
+	cursor: pointer;
+	box-shadow: rgba(0, 0, 0, 0.18) 0.565px 0.565px 1.758px -0.416px,
+		rgba(0, 0, 0, 0.18) 1.445px 1.445px 4.496px -0.833px,
+		rgba(0, 0, 0, 0.18) 2.897px 2.897px 9.014px -1.25px,
+		rgba(0, 0, 0, 0.18) 5.492px 5.492px 17.088px -1.666px,
+		rgba(0, 0, 0, 0.18) 10.917px 10.917px 33.967px -2.083px,
+		rgba(0, 0, 0, 0.18) 24px 24px 74.67px -2.5px,
+		rgb(0, 0, 0) 0px -16px 48px 0px inset;
+}
+
+.demo-btn-sec {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: rgba(255, 255, 255, 0.75);
+	color: rgb(var(--selection-text));
+	border-radius: 213px;
+	padding: 11px 24px;
+	font-family: "Inter Tight", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	border: 1px solid #fff;
+	cursor: pointer;
+	backdrop-filter: blur(2px);
+}
+
+.demo-btns {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: center;
+}
+
+/* Card demo */
+.demo-card-outer {
+	background: rgba(255, 255, 255, 0.5);
+	border-radius: 24px;
+	padding: 20px;
+	box-shadow: rgba(255, 255, 255, 0.25) 0px 0px 0px 8px,
+		rgba(0, 0, 0, 0.1) 12px 16px 16px 0px;
+	backdrop-filter: blur(20px);
+}
+
+.demo-card-inner {
+	background: #fff;
+	border-radius: 33px;
+	padding: 16px;
+	box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.6);
+	line-height: 1.6;
+}
+
+/* Pill icon demo */
+.demo-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.demo-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: #fff;
+	border-radius: 999px;
+	padding: 7px 14px 7px 7px;
+	font-family: "Inter Tight", sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	color: #111;
+}
+
+.demo-pill-dot {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+/* Pill colored shadows */
+.pill-orange {
+	box-shadow: 0 2px 0 #ffbca0, 0 4px 0 #ff9c70, 0 6px 0 #ff7d45, 0 8px 0 #e05010, 0 10px 0 #b03808, 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pill-dark {
+	box-shadow: 0 2px 0 #888, 0 4px 0 #666, 0 6px 0 #444, 0 8px 0 #222, 0 10px 0 #000, 0 12px 16px rgba(0, 0, 0, 0.15);
+}
+
+.pill-pink {
+	box-shadow: 0 2px 0 #ffc0e0, 0 4px 0 #ff90c0, 0 6px 0 #ff60a0, 0 8px 0 #e01060, 0 10px 0 #b00040, 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pill-green {
+	box-shadow: 0 2px 0 #a8ffc8, 0 4px 0 #6feea8, 0 6px 0 #3fdd88, 0 8px 0 #10b060, 0 10px 0 #088040, 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pill-blue {
+	box-shadow: 0 2px 0 #c0e8ff, 0 4px 0 #90d0ff, 0 6px 0 #60b8ff, 0 8px 0 #1090e0, 0 10px 0 #0060b0, 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pill-yellow {
+	box-shadow: 0 2px 0 #fff0c0, 0 4px 0 #ffe090, 0 6px 0 #ffd060, 0 8px 0 #e0b010, 0 10px 0 #b08000, 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Nav pill demo */
+.demo-nav {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: rgba(255, 255, 255, 0.5);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 10px;
+	padding: 7px 14px;
+	box-shadow: rgba(255, 255, 255, 0.25) 0px 0px 0px 4px;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+.demo-nav-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: rgb(12, 179, 0);
+}
+
+/* Typography demos */
+.typo-row {
+	padding: 16px 0;
+	border-bottom: 1px solid rgb(var(--app-border));
+}
+
+.typo-row:last-child {
+	border-bottom: none;
+}
+
+.typo-label {
+	font-size: 10px;
+	font-family: "Fragment Mono", monospace;
+	color: rgb(var(--app-foreground-muted));
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	margin-bottom: 8px;
+}
+
+.typo-sample-h1 {
+	font-family: "Inter Display", sans-serif;
+	font-size: clamp(40px, 5vw, 64px);
+	font-weight: 500;
+	letter-spacing: -0.06em;
+	line-height: 1.15;
+	color: rgb(var(--app-foreground));
+}
+
+.typo-sample-h2 {
+	font-family: "Inter Display", sans-serif;
+	font-size: 32px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.4;
+	color: rgb(var(--app-foreground));
+}
+
+.typo-sample-serif {
+	font-family: "Instrument Serif", serif;
+	font-style: italic;
+	font-size: 24px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+.typo-sample-body {
+	font-family: "Inter Tight", sans-serif;
+	font-size: 18px;
+	line-height: 1.7;
+	color: rgb(var(--app-foreground-muted));
+}
+
+.typo-sample-mono {
+	font-family: "Fragment Mono", monospace;
+	font-size: 13px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+.typo-meta {
+	font-family: "Fragment Mono", monospace;
+	font-size: 10px;
+	color: rgb(var(--app-foreground-muted));
+	margin-top: 6px;
+}
+
+/* Spacing demo */
+.spacing-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 8px;
+}
+
+.spacing-bar-wrap {
+	flex: 1;
+}
+
+.spacing-bar {
+	height: 16px;
+	background: rgba(255, 94, 0, 0.25);
+	border-radius: 2px;
+	border-left: 2px solid rgb(var(--app-brand));
+}
+
+.spacing-token {
+	font-family: "Fragment Mono", monospace;
+	font-size: 11px;
+	color: rgb(var(--app-foreground-muted));
+	width: 40px;
+}
+
+.spacing-px {
+	font-family: "Fragment Mono", monospace;
+	font-size: 11px;
+	color: rgb(var(--app-foreground-muted));
+	width: 32px;
+	text-align: right;
+}
+
+/* Easing demos */
+.easing-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 10px;
+}
+
+.easing-card {
+	background: rgb(var(--app-surface));
+	border: 1px solid rgb(var(--app-border));
+	border-radius: 12px;
+	padding: 16px;
+	cursor: pointer;
+}
+
+.easing-card:hover .easing-ball {
+	animation: none;
+}
+
+.easing-track {
+	height: 40px;
+	position: relative;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.easing-ball {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: rgb(var(--app-brand));
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+}
+
+@keyframes moveEase {
+	from {
+		left: 0;
+	}
+
+	to {
+		left: calc(100% - 12px);
+	}
+}
+
+.easing-name {
+	font-size: 11px;
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.easing-val {
+	font-family: "Fragment Mono", monospace;
+	font-size: 9px;
+	color: rgb(var(--app-foreground-muted));
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+	.sidebar {
+		transform: translateX(-100%);
+	}
+
+	/* Closed by default on mobile */
+	.sidebar.open {
+		transform: translateX(0);
+	}
+
+	.main {
+		margin-left: 0;
+		padding: 24px 20px 60px;
+	}
+
+	/* Don't push main content on mobile, just let sidebar overlay */
+	.main.sidebar-open {
+		margin-left: 0;
+	}
+
+	.sidebar-toggle {
+		left: 14px;
+	}
+
+	/* Default button position on mobile */
+	.sidebar-toggle.is-open {
+		left: 246px;
+	}
+
+	.color-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.shadow-grid,
+	.component-grid,
+	.easing-grid {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
+
+</head>
+<body style="overscroll-behavior: none;">
+<div data-theme="niick-lib">
+<div class="shell">
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">N</div>
+    <div>
+      <div class="logo-name">NiiCk Studio</div>
+      <div class="logo-sub">Token Ref v1</div>
+    </div>
+  </div>
+
+  <div class="nav-label">Tools</div>
+  <a href="Section-Extractor.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    Section Extractor
+  </a>
+
+  <div class="nav-label" style="margin-top:16px">Reference</div>
+  <a href="#hero" class="nav-item active" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    Overview
+  </a>
+
+  <div class="nav-label" style="margin-top:16px">Tokens</div>
+  <a href="#colors" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22v-6M12 22c-4-3-8-6-8-10a8 8 0 0116 0c0 4-4 7-8 10z"/></svg>
+    Colors
+    <span class="nav-count">13</span>
+  </a>
+  <a href="#typography" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+    Typography
+    <span class="nav-count">5</span>
+  </a>
+  <a href="#spacing" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+    Spacing
+    <span class="nav-count">7</span>
+  </a>
+  <a href="#radius" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
+    Radius
+    <span class="nav-count">7</span>
+  </a>
+  <a href="#shadows" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 21h14V7"/></svg>
+    Shadows
+    <span class="nav-count">3</span>
+  </a>
+  <a href="#easing" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19s2-8 7-13M12 6s4 5 7 13"/></svg>
+    Easing
+    <span class="nav-count">3</span>
+  </a>
+  <a href="#components" class="nav-item" onclick="setActive(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Components
+  </a>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-info">
+      Suite: <span>NiiCk Tools</span><br>
+      Site: <span>denqid.com</span><br>
+      Version: <span>ground truth v1</span>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+
+  <div class="hero" id="hero">
+    <div class="reveal-item hero-badge"><span class="hero-badge-dot"></span>NiiCk Studio · Token System · Ground Truth</div>
+    <h1 class="reveal-item hero-title">Design<br><em>Token</em> Reference</h1>
+    <p class="reveal-item hero-desc">Every CSS value extracted directly from browser computed styles — colors, type, spacing, radius, shadows. No guessing, no tools. These are the exact values.</p>
+    <div class="reveal-item hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n">13</div><div class="hero-stat-l">Color tokens</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">5</div><div class="hero-stat-l">Type styles</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">7</div><div class="hero-stat-l">Spacing scale</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">7</div><div class="hero-stat-l">Radius variants</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">3</div><div class="hero-stat-l">Shadow stacks</div></div>
+    </div>
+  </div>
+
+  <section class="reveal-item token-section" id="colors">
+    <div class="section-head">
+      <div class="section-title">Colors</div>
+      <div class="section-sub">extracted-17 · extracted-53 · extracted-382</div>
+    </div>
+
+    <div class="color-grid">
+      <div class="color-card" onclick="copy('rgb(217, 217, 217)',this)"><div class="color-swatch" style="background:rgb(217,217,217)"></div><div class="color-info"><div class="color-name">Background</div><div class="color-hex">rgb(217, 217, 217)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(22, 22, 22)',this)"><div class="color-swatch" style="background:rgb(22,22,22)"></div><div class="color-info"><div class="color-name">Dark Background</div><div class="color-hex">rgb(22, 22, 22)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(255, 255, 255)',this)"><div class="color-swatch" style="background:#fff;border:1px solid rgba(0,0,0,.08)"></div><div class="color-info"><div class="color-name">Surface</div><div class="color-hex">rgb(255, 255, 255)</div></div></div>
+      <div class="color-card" onclick="copy('rgba(255,255,255,0.5)',this)"><div class="color-swatch" style="background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08)"></div><div class="color-info"><div class="color-name">Glass</div><div class="color-hex">rgba(255,255,255, 0.5)</div></div></div>
+      <div class="color-card" onclick="copy('rgba(255,255,255,0.75)',this)"><div class="color-swatch" style="background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.08)"></div><div class="color-info"><div class="color-name">Glass Strong</div><div class="color-hex">rgba(255,255,255, 0.75)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(255, 94, 0)',this)"><div class="color-swatch" style="background:rgb(255,94,0)"></div><div class="color-info"><div class="color-name">Accent Orange</div><div class="color-hex">rgb(255, 94, 0)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(12, 179, 0)',this)"><div class="color-swatch" style="background:rgb(12,179,0)"></div><div class="color-info"><div class="color-name">Status Green</div><div class="color-hex">rgb(12, 179, 0)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(0,0,0)',this)"><div class="color-swatch" style="background:#000"></div><div class="color-info"><div class="color-name">Text Primary</div><div class="color-hex">rgb(0, 0, 0)</div></div></div>
+      <div class="color-card" onclick="copy('rgba(0,0,0,0.5)',this)"><div class="color-swatch" style="background:rgba(0,0,0,.5)"></div><div class="color-info"><div class="color-name">Text Secondary</div><div class="color-hex">rgba(0,0,0, 0.5)</div></div></div>
+      <div class="color-card" onclick="copy('rgba(0,0,0,0.25)',this)"><div class="color-swatch" style="background:rgba(0,0,0,.25)"></div><div class="color-info"><div class="color-name">Text Tertiary</div><div class="color-hex">rgba(0,0,0, 0.25)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(255, 213, 0)',this)"><div class="color-swatch" style="background:rgb(255,213,0)"></div><div class="color-info"><div class="color-name">Pill Yellow</div><div class="color-hex">rgb(255, 213, 0)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(255, 69, 171)',this)"><div class="color-swatch" style="background:rgb(255,69,171)"></div><div class="color-info"><div class="color-name">Pill Pink</div><div class="color-hex">rgb(255, 69, 171)</div></div></div>
+      <div class="color-card" onclick="copy('rgb(5, 169, 255)',this)"><div class="color-swatch" style="background:rgb(5,169,255)"></div><div class="color-info"><div class="color-name">Pill Blue</div><div class="color-hex">rgb(5, 169, 255)</div></div></div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="typography">
+    <div class="section-head">
+      <div class="section-title">Typography</div>
+      <div class="section-sub">Inter Display · Instrument Serif · Inter Tight</div>
+    </div>
+
+    <div class="typo-row">
+      <div class="typo-label">h1 Hero — Inter Display 500</div>
+      <div class="typo-sample-h1">Brand<span style="color:rgba(255,255,255,.2)">s</span></div>
+      <div class="typo-meta">80px · weight 500 · tracking -0.06em · lh 1.15em · ss01 dlig on</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">h2 Section — Inter Display 600</div>
+      <div class="typo-sample-h2">Recent Case Studies</div>
+      <div class="typo-meta">32px · weight 600 · tracking -0.04em · lh 1.4em</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Eyebrow — Instrument Serif italic</div>
+      <div class="typo-sample-serif">Hello!</div>
+      <div class="typo-meta">24px · italic · color text-secondary</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Body — Inter Tight 400</div>
+      <div class="typo-sample-body">Verified MLBB accounts — every rank, every hero.</div>
+      <div class="typo-meta">18px · weight 400 · lh 1.7em</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Mono — Fragment Mono</div>
+      <div class="typo-sample-mono">rgb(217, 217, 217) · 0.565px 1.758px · cubic-bezier(0.44, 0, 0.56, 1)</div>
+      <div class="typo-meta">12px · for labels, values, timestamps</div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="spacing">
+    <div class="section-head">
+      <div class="section-title">Spacing</div>
+      <div class="section-sub">section-gap · card-padding · grid-gap</div>
+    </div>
+    <div style="max-width:480px">
+      <div class="spacing-row"><span class="spacing-token">xs</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:4px"></div></div><span class="spacing-px">4px</span></div>
+      <div class="spacing-row"><span class="spacing-token">sm</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:8px"></div></div><span class="spacing-px">8px</span></div>
+      <div class="spacing-row"><span class="spacing-token">md</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16px"></div></div><span class="spacing-px">16px</span></div>
+      <div class="spacing-row"><span class="spacing-token">lg</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:24px"></div></div><span class="spacing-px">24px</span></div>
+      <div class="spacing-row"><span class="spacing-token">xl</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:36px"></div></div><span class="spacing-px">36px</span></div>
+      <div class="spacing-row"><span class="spacing-token">2xl</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:48px"></div></div><span class="spacing-px">48px</span></div>
+      <div class="spacing-row"><span class="spacing-token">section</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:120px"></div></div><span class="spacing-px">120px</span></div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="radius">
+    <div class="section-head">
+      <div class="section-title">Border Radius</div>
+      <div class="section-sub">extracted-38 · extracted-404 · extracted-191</div>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:10px"></div><div class="radius-name">Nav Container</div><div class="radius-val">10px ✅</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:26px"></div><div class="radius-name">Pill Icon BG</div><div class="radius-val">26px</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:16px"></div><div class="radius-name">Card</div><div class="radius-val">16px ✅</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:24px"></div><div class="radius-name">Outer Card</div><div class="radius-val">24px ✅</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:33px"></div><div class="radius-name">Inner Card</div><div class="radius-val">33px ✅</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:154px"></div><div class="radius-name">Button</div><div class="radius-val">154px ✅</div></div>
+      <div class="radius-card" style="border-radius:10px"><div class="radius-box" style="border-radius:999px"></div><div class="radius-name">Pill</div><div class="radius-val">999px</div></div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="shadows">
+    <div class="section-head">
+      <div class="section-title">Shadows</div>
+      <div class="section-sub">extracted-191 · extracted-331 · extracted-68</div>
+    </div>
+    <div class="shadow-grid">
+      <div class="shadow-card">
+        <div class="shadow-box" style="box-shadow:rgba(0,0,0,.18) 0.565px 0.565px 1.758px -.416px,rgba(0,0,0,.18) 1.445px 1.445px 4.496px -.833px,rgba(0,0,0,.18) 2.897px 2.897px 9.014px -1.25px,rgba(0,0,0,.18) 5.492px 5.492px 17.088px -1.666px,rgba(0,0,0,.18) 10.917px 10.917px 33.967px -2.083px,rgba(0,0,0,.18) 24px 24px 74.67px -2.5px,rgb(0,0,0) 0px -16px 48px 0px inset;border-radius:12px;background:rgb(217,217,217)"></div>
+        <div class="shadow-name">Button Primary</div><div class="shadow-desc">7-layer progressive<br>+ inset dark base<br>extracted-191 ✅</div>
+      </div>
+      <div class="shadow-card">
+        <div class="shadow-box" style="box-shadow:rgba(255,255,255,.25) 0px 0px 0px 8px,rgba(0,0,0,.1) 12px 16px 16px 0px;background:rgb(255,255,255);border-radius:16px"></div>
+        <div class="shadow-name">Card Standard</div><div class="shadow-desc">White glow ring 8px<br>+ soft drop shadow<br>extracted-331 ✅</div>
+      </div>
+      <div class="shadow-card">
+        <div class="shadow-box" style="box-shadow:rgba(0,0,0,.5) 0.565px 0.565px 0.799px -.708px,rgba(0,0,0,.48) 1.445px 1.445px 2.043px -1.416px,rgba(0,0,0,.46) 2.897px 2.897px 4.097px -2.125px,rgba(0,0,0,.41) 5.492px 5.492px 7.767px -2.833px,rgba(0,0,0,.32) 10.917px 10.917px 15.439px -3.541px,rgba(0,0,0,.09) 24px 24px 33.941px -4.25px;background:rgb(22,22,22);border-radius:36px"></div>
+        <div class="shadow-name">App Icon (Heavy)</div><div class="shadow-desc">6-layer depth shadow<br>for dark elements<br>extracted-68 ✅</div>
+      </div>
+      <div class="shadow-card">
+        <div class="shadow-box" style="box-shadow:0 2px 20px rgba(0,0,0,.04);background:rgb(255,255,255);border-radius:16px"></div>
+        <div class="shadow-name">Float Soft</div><div class="shadow-desc">Minimal lift shadow<br>for white surface cards<br>process/test cards</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="easing">
+    <div class="section-head">
+      <div class="section-title">Easing</div>
+      <div class="section-sub">Framer appear JSON · cubic-bezier values</div>
+    </div>
+    <div class="easing-grid">
+      <div class="easing-card easing-play">
+        <div class="easing-track"><div class="easing-ball" style="animation:moveEase 1.5s cubic-bezier(0.44,0,0.56,1) infinite alternate"></div></div>
+        <div class="easing-name">Standard</div><div class="easing-val">cubic-bezier(0.44, 0, 0.56, 1)</div>
+      </div>
+      <div class="easing-card">
+        <div class="easing-track"><div class="easing-ball" style="animation:moveEase 1.5s cubic-bezier(0.34,1.56,0.64,1) .5s infinite alternate"></div></div>
+        <div class="easing-name">Spring</div><div class="easing-val">cubic-bezier(0.34, 1.56, 0.64, 1)</div>
+      </div>
+      <div class="easing-card">
+        <div class="easing-track"><div class="easing-ball" style="animation:moveEase 1.5s cubic-bezier(0.33,1.53,0.69,0.99) 1s infinite alternate"></div></div>
+        <div class="easing-name">Back</div><div class="easing-val">cubic-bezier(0.33, 1.53, 0.69, 0.99)</div>
+      </div>
+    </div>
+    <div class="token-row" style="margin-top:16px">
+      <div class="token-info">
+        <div class="token-name">Hero entrance delay</div>
+        <div class="token-val">delay: 1s · duration: 1s · type: tween</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal-item token-section" id="components">
+    <div class="section-head">
+      <div class="section-title">Components</div>
+      <div class="section-sub">Live previews using ground truth values</div>
+    </div>
+    <div class="component-grid">
+
+      <div class="component-card">
+        <h4>Buttons</h4>
+        <div class="demo-btns" style="background:rgb(217,217,217);padding:24px;border-radius:16px;gap:12px">
+          <button class="demo-btn">Book a Meeting →</button>
+          <button class="demo-btn-sec">Learn more</button>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <h4>Nav Container</h4>
+        <div style="background:rgb(217,217,217);padding:24px;border-radius:16px;display:flex;align-items:center;justify-content:center">
+          <div class="demo-nav">
+            <span class="demo-nav-dot"></span>
+            NiiCk Studio
+          </div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <h4>Card Layers (glass → inner)</h4>
+        <div style="background:rgb(170,170,170);padding:20px;border-radius:16px">
+          <div class="demo-card-outer">
+            <div class="demo-card-inner">Inner card (33px radius)<br>whiteSurfaceFloat</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <h4>Service Pills (6-layer shadow)</h4>
+        <div style="background:rgb(217,217,217);padding:24px;border-radius:16px">
+          <div class="demo-pills">
+            <div class="demo-pill pill-orange"><span class="demo-pill-dot" style="background:#FF5E00"></span>Design</div>
+            <div class="demo-pill pill-green"><span class="demo-pill-dot" style="background:#52FF69"></span>Animation</div>
+            <div class="demo-pill pill-pink"><span class="demo-pill-dot" style="background:#FF45AB"></span>Branding</div>
+            <div class="demo-pill pill-dark"><span class="demo-pill-dot" style="background:#474747"></span>UX Design</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+// Reveal Animation Engine (Fixed)
+document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Apply reveal to elements that have .reveal-item
+    document.querySelectorAll('.reveal-item').forEach(el => {
+        el.classList.add('reveal-hidden');
+        revealObserver.observe(el);
+    });
+
+    // Check initial sidebar state based on screen size
+    if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.add('closed');
+        document.getElementById('sidebarToggle').classList.add('is-closed');
+    }
+});
+
+// Sidebar Toggle Logic (Fixed for responsive)
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const tb = document.getElementById('sidebarToggle');
+  const main = document.querySelector('.main');
+  
+  if (window.innerWidth <= 900) {
+    // Mobile logic
+    sb.classList.toggle('open');
+    sb.classList.toggle('closed');
+    tb.classList.toggle('is-open');
+    tb.classList.toggle('is-closed');
+  } else {
+    // Desktop logic
+    sb.style.transform = sb.style.transform === 'translateX(-100%)' ? 'translateX(0)' : 'translateX(-100%)';
+    tb.style.left = tb.style.left === '14px' ? '246px' : '14px';
+    tb.querySelector('svg').style.transform = tb.style.left === '14px' ? 'rotate(180deg)' : 'rotate(0deg)';
+    main.style.marginLeft = main.style.marginLeft === '0px' ? '232px' : '0px';
+  }
+}
+
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function copy(val, card) {
+  navigator.clipboard?.writeText(val).catch(()=>{});
+  const hex = card.querySelector('.color-hex');
+  const orig = hex.textContent;
+  hex.textContent = 'Copied!';
+  hex.style.color = 'rgb(12,179,0)';
+  setTimeout(() => { hex.textContent = orig; hex.style.color = ''; }, 1500);
+}
+
+/**
+ * DX Scroll Controller: Prevents overscroll and rubber-banding
+ */
+function initScrollPrevention() {
+    // Apply overscroll-behavior to the body
+    document.body.style.overscrollBehavior = "none";
+
+    // Optional: Prevention for older Safari versions
+    document.addEventListener('touchmove', (e) => {
+        if (e.target === document.body) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+}
+
+// Execute when DOM is ready
+document.addEventListener("DOMContentLoaded", initScrollPrevention);
+
+
+// Update active nav on scroll
+const sections = document.querySelectorAll('.token-section, .hero');
+const navItems = document.querySelectorAll('.nav-item');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) {
+        current = s.id;
+    }
+  });
+  navItems.forEach(n => {
+    const href = n.getAttribute('href').substring(1);
+    if (href === current) {
+        n.classList.add('active');
+    } else {
+        n.classList.remove('active');
+    }
+  });
+}, { passive:true });
+</script>
+</body>
+</html>

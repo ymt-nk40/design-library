@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="custom-app-tool" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Extract HTML snippet with CSS</title>
+    
+    <script src="./js/include.js" defer></script>
+    
+    <meta
+      content="Section Extractor is a simple browser tool for extracting reusable HTML sections with only the CSS they actually need. Upload an HTML file and CSS file, choose a section, preview it, copy it, or download it as a standalone HTML file."
+      name="description" />
+    <meta content="HTML section extractor, CSS extractor, Webflow export tool, HTML CSS cleaner,HTML CSS Formatter, standalone HTML section, frontend utility tool" name="keywords" />
+    <meta content="NiiCk Studio" name="author" />
+    <meta content="index, follow" name="robots" />
+    <meta content="Section Extractor -- Reusable HTML Section Exporter" property="og:title" />
+    <meta
+      content="Upload full exported HTML and CSS files, select a section, and export it as a clean standalone HTML file with only the CSS it needs."
+      property="og:description" />
+    <meta content="website" property="og:type" />
+    <meta content="https://ymt-nk40.github.io/web-section-isolator/" property="og:url" />
+    <meta content="https://ymt-nk40.github.io/web-section-isolator/og-image.png" property="og:image" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <meta content="Section Extractor -- Reusable HTML Section Exporter" name="twitter:title" />
+    <meta
+      content="Extract reusable HTML sections from exported HTML and CSS files with live preview, formatting, copy, and download."
+      name="twitter:description" />
+    <meta content="https://ymt-nk40.github.io/web-section-isolator/og-image.png" name="twitter:image" />
+    <meta content="#000000" name="theme-color" />
+    
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+
+    <link rel="stylesheet" href="./css/global-app.css">
+        <link rel="stylesheet" href="./css/extractor-app.css">
+     <link rel="stylesheet" href="./css/toggle-button.css">
+    
+    
+    <link rel="stylesheet" href="./css/icons.css">
+    <link href="./css/sidebar.css" rel="stylesheet">
+
+    <script src="./js/app-logic.js" defer></script>
+  
+ </head>
+  <body class="body-locked">
+    <div class="app-shell">
+      <div class="sidebar" id="sidebarOverlay" onclick="closeSidebar()">
+      </div>
+      <div id="sidebar-container">
+      </div>
+      <header>
+        <div class="header-left">
+          <a class="btn-menu" href="#" id="menuBtn" onclick="toggleSidebar()" title="Toggle sidebar">
+            <div class="btn-menu__burger-wrap">
+           <span></span><span></span>
+              <span> </span>
+            </div>
+          </a>
+          <div class="app-logo-text">Codes<span>.</span>Extractor<span class="header-title-badge">
+            NiiCk Studio
+            </span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="cyber-toggle-wrapper">
+            <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
+            <label class="cyber-toggle" for="cyber-toggle">
+        <div class="cyber-toggle-track">
+          <div class="cyber-toggle-track-glow">
+          </div>
+          <div class="cyber-toggle-track-dots">
+            <span class="cyber-toggle-track-dot">
+            </span>
+            <span class="cyber-toggle-track-dot">
+            </span>
+            <span class="cyber-toggle-track-dot">
+                  </span>
+                </div>
+              </div>
+              <div class="cyber-toggle-thumb">
+                <div class="cyber-toggle-thumb-icon">
+                </div>
+              </div>
+          <div class="cyber-toggle-particles">
+            <span class="cyber-toggle-particle">
+            </span>
+            <span class="cyber-toggle-particle">
+            </span>
+            <span class="cyber-toggle-particle">
+            </span>
+            <span class="cyber-toggle-particle">
+            </span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </header>
+      <!-- SCROLL AREA -->
+      <div class="content-scroll">
+        <div class="main">
+          <div class="upload-section">
+            <h2 class="section-title">
+              <strong>Upload Your</strong>
+         <strong data-accent="">Project</strong>
+              <strong>files</strong>
+            </h2>
+            <p class="section-subtitle">
+              Select the project files you want to extract components from.
+            </p>
+          </div>
+          <div class="upload-row">
+            <div class="upload-card" id="htmlCard">
+              <input accept=".html,.htm" id="htmlInput" type="file" />
+              <div class="upload-icon">
+         <span data-color="true" class="html-icon">
+                </span>
+              </div>
+              <div class="upload-label">
+                <strong>
+                HTML File
+                </strong>
+              </div>
+              <div class="upload-sub">
+                export.html
+              </div>
+              <div class="upload-status" id="htmlStatus">
+              </div>
+            </div>
+            <div class="upload-card" id="cssCard">
+              <input accept=".css" id="cssInput" type="file" />
+              <div class="upload-icon">
+         <span data-color="true" class="css-icon">
+                </span>
+              </div>
+              <div class="upload-label">
+                <strong>
+                CSS File
+                </strong>
+              </div>
+              <div class="upload-text">
+                style.css
+              </div>
+              <div class="upload-status" id="cssStatus">
+              </div>
+            </div>
+          </div>
+          <div class="section-box" id="sectionBox" style="display:none">
+            <div class="section-label">
+              Choose Section
+            </div>
+            <div class="section-list" id="sectionList">
+            </div>
+          </div>
+          <div class="stats-row" id="statsRow" style="display:none">
+          </div>
+          <!-- Output -->
+          <div class="output-box" id="outputBox" style="display:none">
+            <div class="output-head">
+              <span id="outputFilename">
+              output.html
+              </span>
+              <div class="out-actions">
+                <button class="btn-format" onclick="runFormatter(event)">
+                <span>
+                Format
+                </span>
+                </button>
+                <button class="btn-small btn-copy" id="copyBtn" onclick="copyOutput()">
+                  <svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                    viewbox="0 0 24 24" width="12">
+                    <rect height="13" rx="2" width="13" x="9" y="9">
+                    </rect>
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1">
+                    </path>
+                  </svg>
+                  Copy
+                </button>
+                <label class="download" id="downloadLabel">
+                  <input class="download-checkbox" id="downloadCheckbox"
+                    onchange="if(this.checked){ setTimeout(()=&gt;dlOutput(),3500); setTimeout(()=&gt;resetDownload(),5500); }"
+                    type="checkbox" />
+                  <span class="circle">
+                    <svg class="icon" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 19V5m0 14-4-4m4 4 4-4" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                      </path>
+                    </svg>
+                    <div class="square">
+                    </div>
+                  </span>
+                  <p class="title">
+                    Download
+                  </p>
+                  <p class="title">
+                    Saved
+                  </p>
+                </label>
+              </div>
+            </div>
+            <pre class="output-pre"><code class="language-html" id="outputPre"></code></pre>
+          </div>
+        </div>
+        <!-- /main -->
+
+        <div class="preview-box" id="previewBox" style="display:none">
+          <div class="preview-head">
+            <div class="preview-dots">
+              <span>
+              </span>
+              <span>
+              </span>
+              <span>
+              </span>
+            </div>
+            <div class="preview-title">
+              Live Preview
+            </div>
+            <div class="preview-controls">
+              <button class="vp-btn" data-vp="mobile" onclick="setViewport('mobile',this)" title="Mobile">
+                <svg fill="none" height="11" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"
+                  viewbox="0 0 24 24" width="11">
+                  <rect height="20" rx="2" width="10" x="7" y="2">
+                  </rect>
+                  <circle cx="12" cy="18" fill="currentColor" r="1" stroke="none">
+                  </circle>
+                </svg>
+                375
+              </button>
+              <button class="vp-btn" data-vp="tablet" onclick="setViewport('tablet',this)" title="Tablet">
+                <svg fill="none" height="11" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"
+                  viewbox="0 0 24 24" width="11">
+                  <rect height="20" rx="2" width="16" x="4" y="2">
+                  </rect>
+                  <circle cx="12" cy="18" fill="currentColor" r="1" stroke="none">
+                  </circle>
+                </svg>
+                768
+              </button>
+              <button class="vp-btn active" data-vp="desktop" onclick="setViewport('desktop',this)" title="Desktop">
+                <svg fill="none" height="11" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"
+                  viewbox="0 0 24 24" width="11">
+                  <rect height="14" rx="2" width="20" x="2" y="3">
+                  </rect>
+                  <path d="M8 21h8M12 17v4">
+                  </path>
+                </svg>
+                Full
+              </button>
+              <div class="vp-sep">
+              </div>
+              <button class="btn-refresh" onclick="refreshPreview()" title="Refresh">
+                <svg fill="none" height="13" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"
+                  viewbox="0 0 24 24" width="13">
+                  <path d="M21 12a9 9 0 01-9 9M3 12a9 9 0 019-9M21 3v6h-6M3 21v-6h6">
+                  </path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="preview-body" id="previewBody">
+            <div class="preview-scaler" data-vp="desktop" id="previewScaler">
+              <iframe id="previewFrame" title="Section Preview">
+              </iframe>
+            </div>
+            <div class="preview-empty" id="previewEmpty">
+              <svg fill="none" height="36" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"
+                viewbox="0 0 24 24" width="36">
+                <rect height="14" rx="2" width="20" x="2" y="3">
+                </rect>
+                <path d="M8 21h8M12 17v4M9 10h6M9 13h4">
+                </path>
+              </svg>
+              <p>
+                Preview will appear here after extraction
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /content-scroll -->
+      <footer>
+        <button class="download-button" disabled="" id="extractBtn" onclick="extract()">
+          <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" viewbox="0 0 24 24"
+            width="14">
+            <path d="M12 17V3M7 8l5-5 5 5M20 17H4M4 21h16">
+            </path>
+          </svg>
+          <span class="gradient-text">
+          Extract Now
+          </span>
+        </button>
+        <div class="hint" id="hint">
+          Upload HTML + CSS to begin
+        </div>
+      </footer>
+    </div>
+    <!-- /app-shell -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
